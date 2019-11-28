@@ -20,15 +20,13 @@ func main() {
 	songTwo := &Song{"bicicleta", songThree}
 	songOne := &Song{"estoy aqui", songTwo}
 
-	s := songOne
-
 	strangerSong := &Song{"Garota de ipanema", nil}
-
 	actualSong := *songTwo
 
 	songTwo.next = strangerSong
 	strangerSong.next = actualSong.next
 
+	s := songOne
 	i := 0
 	for i < 4 {
 		fmt.Println(s)
