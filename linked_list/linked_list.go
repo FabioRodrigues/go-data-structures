@@ -29,11 +29,10 @@ func main() {
 	songTwo.next = strangerSong
 	strangerSong.next = actualSong.next
 
-	count := 0
-	for s.name != "waka-waka" || s.next != nil {
+	i := 0
+	for i < 4 {
 		fmt.Println(s)
 		s = s.next
-		count++
+		i++
 	}
-	fmt.Println("element found at index", count)
 }
