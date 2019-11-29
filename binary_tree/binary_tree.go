@@ -70,23 +70,68 @@ func (n Node) SearchKey(key int) {
 	return
 }
 
-func main() {
-	root := NewNode(4)
-	root.Insert(2)
-	root.Insert(3)
-	root.Insert(1)
-	root.Insert(6)
-	root.Insert(5)
-	root.Insert(7)
+//Delete ...
+func (n *Node) Delete(key int) {
+	if key < n.Key {
+		if n.Left == nil {
+			fmt.Printf("key %2d not found", key)
+			return
+		}
+		if n.Left.Key == key {
+			fmt.Println("deleting item", key)
+			n.Left = nil
+			return
+		}
+		n.Left.Delete(key)
+		return
+	}
 
+	if n.Right == nil {
+		fmt.Printf("key %2d not found", key)
+		return
+	}
+	if n.Right.Key == key {
+		fmt.Println("deleting item", key)
+		n.Right = nil
+		return
+	}
+	n.Right.Delete(key)
+	return
+}
+
+func main() {
+
+	root := insertItems([]int{4, 2, 3, 1, 6, 5, 7})
+	// root := insertItems([]int{4, 2, 5})
+
+	printItems(root)
+
+	// root.SearchKey(3)
+	root.Delete(3)
+	printItems(root)
+
+}
+
+func printItems(root *Node) {
 	tree, err := json.Marshal(root)
 	if err != nil {
 		fmt.Print(err)
 		return
 	}
-
-	fmt.Println(string(tree))
-
 	fmt.Printf("\n.......... *** .......... \n\n\n")
-	root.SearchKey(3)
+	fmt.Println(string(tree))
+	fmt.Printf("\n.......... *** .......... \n\n\n")
+}
+
+func insertItems(items []int) *Node {
+	if len(items) == 0 {
+		return nil
+	}
+
+	root := NewNode(items[0])
+
+	for _, e := range items[1:] {
+		root.Insert(e)
+	}
+	return root
 }
