@@ -17,6 +17,22 @@ func NewNode(key int) *Node {
 	return &Node{Key: key}
 }
 
+func (n Node) hasJustOneChild() (bool, *Node) {
+
+	if n.Right == nil && n.Left != nil {
+		return true, n.Left
+	}
+
+	if n.Left == nil && n.Right != nil {
+		return true, n.Right
+	}
+	return false, nil
+}
+
+func (n Node) hasnoChildren() bool {
+	return (n.Right == nil && n.Left == nil)
+}
+
 //Insert ...
 func (n *Node) Insert(key int) {
 	fmt.Printf("inserting key %2d ...\n", key)
@@ -41,6 +57,22 @@ func (n *Node) Insert(key int) {
 	}
 	n.Right.Insert(key)
 	return
+}
+
+//Min ...
+func (n *Node) Min() *Node {
+	if n.Left == nil {
+		return n
+	}
+	return n.Left.Min()
+}
+
+//Max ...
+func (n *Node) Max() *Node {
+	if n.Right == nil {
+		return n
+	}
+	return n.Right.Min()
 }
 
 //SearchKey ...
@@ -78,10 +110,34 @@ func (n *Node) Delete(key int) {
 			return
 		}
 		if n.Left.Key == key {
+			nodeToBeDeleted := *n.Left
 			fmt.Println("deleting item", key)
-			n.Left = nil
+
+			//first case, trying to remove a leaf
+			if nodeToBeDeleted.hasnoChildren() {
+				n.Left = nil
+				return
+			}
+
+			//second case, has just one child
+			has, child := nodeToBeDeleted.hasJustOneChild()
+			if has {
+				n.Left = child
+				return
+			}
+
+			//last case, get the leftiest node of the right subtree
+			min := *nodeToBeDeleted.Right.Min()
+			n.Delete(min.Key)
+
+			n.Left = &min
+			n.Left.Left = nodeToBeDeleted.Left
+			n.Left.Right = nodeToBeDeleted.Right
+
 			return
+
 		}
+
 		n.Left.Delete(key)
 		return
 	}
@@ -92,7 +148,26 @@ func (n *Node) Delete(key int) {
 	}
 	if n.Right.Key == key {
 		fmt.Println("deleting item", key)
-		n.Right = nil
+
+		nodeToBeDeleted := n.Right
+
+		if n.Right.hasnoChildren() {
+			n.Right = nil
+			return
+		}
+
+		has, child := n.Right.hasJustOneChild()
+		if has {
+			n.Right = child
+			return
+		}
+		//last case, get the leftiest node of the right subtree
+		min := *nodeToBeDeleted.Right.Min()
+		n.Delete(min.Key)
+
+		n.Right = &min
+		n.Right.Left = nodeToBeDeleted.Left
+		n.Right.Right = nodeToBeDeleted.Right
 		return
 	}
 	n.Right.Delete(key)
@@ -101,13 +176,10 @@ func (n *Node) Delete(key int) {
 
 func main() {
 
-	root := insertItems([]int{4, 2, 3, 1, 6, 5, 7})
-	// root := insertItems([]int{4, 2, 5})
+	root := insertItems([]int{50, 30, 100, 20, 40, 35, 45, 37})
 
 	printItems(root)
-
-	// root.SearchKey(3)
-	root.Delete(3)
+	root.Delete(30)
 	printItems(root)
 
 }
