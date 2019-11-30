@@ -174,14 +174,48 @@ func (n *Node) Delete(key int) {
 	return
 }
 
+//PreOrder ...
+func (n *Node) PreOrder() {
+	fmt.Println(n.Key)
+
+	if n.Left != nil {
+		n.Left.PreOrder()
+	}
+	if n.Right != nil {
+		n.Right.PreOrder()
+	}
+}
+
+//InOrder ...
+func (n *Node) InOrder() {
+	if n.Left != nil {
+		n.Left.InOrder()
+	}
+
+	fmt.Println(n.Key)
+
+	if n.Right != nil {
+		n.Right.InOrder()
+	}
+}
+
+//PostOrder ...
+func (n *Node) PostOrder() {
+	if n.Left != nil {
+		n.Left.PostOrder()
+	}
+
+	if n.Right != nil {
+		n.Right.PostOrder()
+	}
+
+	fmt.Println(n.Key)
+}
+
 func main() {
 
-	root := insertItems([]int{50, 30, 100, 20, 40, 35, 45, 37})
-
-	printItems(root)
-	root.Delete(30)
-	printItems(root)
-
+	root := insertItems([]int{8, 3, 10, 1, 6, 14, 4, 7, 13})
+	root.PostOrder()
 }
 
 func printItems(root *Node) {
