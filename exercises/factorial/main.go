@@ -5,7 +5,7 @@ import "fmt"
 //5! => 5*4*3*2*1=120
 
 func main() {
-	fact := factorialNotRecursive(1)
+	fact := factorialRecursive(5)
 	fmt.Println(fact)
 }
 
@@ -16,4 +16,11 @@ func factorialNotRecursive(fact int) int {
 		ret *= i
 	}
 	return ret
+}
+
+func factorialRecursive(fact int) int {
+	if fact == 1 {
+		return fact
+	}
+	return fact * factorialRecursive(fact-1)
 }
