@@ -7,7 +7,7 @@ func main() {
 	fmt.Println(fib)
 }
 
-func fibonnaciNotRecursive(term int) int {
+func fibonacciNotRecursive(term int) int {
 	if term == 1 || term == 2 {
 		return term - 1
 	}
